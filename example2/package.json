@@ -1,0 +1,18 @@
+{
+  "name": "ceptre",
+  "version": "1.0.0",
+  "description": "I want to build a multiplayer game based around the [Ceptre](https://github.com/chrisamaphone/interactive-lp) linear logic language, by [Chris Martens](https://www.csc.ncsu.edu/people/crmarten). I'm no researcher -- just a web developer, not even a game designer. So I'm going to write up what I learn.",
+  "main": "ceptre.js",
+  "dependencies": {
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "",
+  "license": "ISC"
+}
