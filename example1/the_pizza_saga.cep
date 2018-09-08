@@ -1,0 +1,14 @@
+richard : pred.
+pizza : pred.
+
+context init = {
+richard, pizza
+}
+
+stage main
+{
+  eat_pizza : richard * pizza -o richard.
+  slice_pizza_in_half : richard * pizza -o richard * pizza * pizza.
+}
+
+#trace _ main init.
