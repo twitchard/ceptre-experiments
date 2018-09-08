@@ -5,7 +5,7 @@ const writeFile   = promisify(require('fs').writeFile)
 const readFile    = promisify(require('fs').readFile)
 const mkdtemp     = promisify(require('fs').mkdtemp)
 const rmdir       = promisify(require('fs').rmdir)
-const path = require('path')
+const path        = require('path')
 
 async function invokeCeptre (input) {
     const folder = await mkdtemp('cep')
@@ -13,7 +13,7 @@ async function invokeCeptre (input) {
         await writeFile(path.join(folder, 'input'), input)
         const {stdout, stderr} = await exec(`ceptre input`, { cwd: folder })
         if (stderr) {
-            throw new Error(`Ceptre errored: ${stderr}`)
+            throw new Error(`Ceptre output something to stderr: ${stderr}`)
         }
         return await readFile(
             path.join(folder, 'ceptre.json'),
