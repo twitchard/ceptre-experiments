@@ -1,1 +1,4 @@
 **/node_modules
+**/trace.dot
+**/log.txt
+**/ceptre.json

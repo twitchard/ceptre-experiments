@@ -1,0 +1,82 @@
+player : type.
+player1 : player.
+player2 : player.
+
+move : type.
+rock : move.
+scissors : move.
+paper : move.
+
+selected player move: pred.
+ready player : pred.
+
+nat : type.
+zero : nat.
+succ nat : nat.
+
+victories player nat : pred.
+draws nat : pred.
+
+beats move move: bwd.
+beats rock scissors.
+beats scissors paper.
+beats paper rock.
+
+max_victories nat : bwd.
+max_victories (succ
+              (succ
+               zero)).
+
+stage main {
+  win: selected P Move1 *
+       selected P' Move2 *
+       beats Move1 Move2 *
+       victories P N
+         -o
+       ready P *
+       ready P' *
+       victories P (succ N).
+
+  draw: selected P Move *
+        selected P' Move *
+        draws N
+          -o
+        ready P *
+        ready P' *
+        draws (succ N).
+
+  score_check: ready P *
+               ready P' *
+               victories P N *
+               max_victories N
+               -o ().
+}
+
+stage play { 
+  play_rock : ready P -o selected P rock. 
+  play_paper : ready P -o selected P paper. 
+  play_scissors : ready P -o selected P scissors. 
+}
+#interactive play.
+
+continue_playing: qui *
+                  stage main *
+                  $ready player1 *
+                  $ready player2
+                    -o
+                  stage play.
+
+determine_winner: qui *
+                  stage play
+                    -o
+                  stage main.
+
+context init {
+  victories player1 zero,
+  victories player2 zero,
+  draws zero,
+  ready player1,
+  ready player2
+}
+
+#trace _ play init.
