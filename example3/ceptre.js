@@ -30,18 +30,16 @@ async function* executeCeptre (ceptreProgram, inputStream) {
     await writeFile(inputFile, ceptreProgram)
 
     const subprocess = spawn('../ceptre', ['ceptreProgram'], { cwd: folder })
-    process.stdin.pipe(inputStream)
+    inputStream.pipe(subprocess.stdin)
 
     for await (const line of lines(subprocess.stdout)) {
         yield JSON.parse(line)
     }
 
-    try {
-        await unlink(inputFile)
-        await unlink(path.join(folder, 'trace.dot'))
-        await unlink(path.join(folder, 'ceptre.json'))
-        await rmdir(folder)
-    } catch {}
+    await unlink(inputFile).catch(()=>{})
+    await unlink(path.join(folder, 'trace.dot')).catch(()=>{})
+    await unlink(path.join(folder, 'ceptre.json')).catch(()=>{})
+    await rmdir(folder)
 }
 
 async function main() {
