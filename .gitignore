@@ -2,3 +2,5 @@
 **/trace.dot
 **/log.txt
 **/ceptre.json
+**/.cache
+**/dist

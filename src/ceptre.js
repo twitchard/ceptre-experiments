@@ -3,7 +3,6 @@ const {promisify}  = require('util')
 const fs           = require('fs')
 const spawn        = require('child_process').spawn
 const writeFile    = promisify(fs.writeFile)
-const readFile     = promisify(fs.readFile)
 const mkdtemp      = promisify(fs.mkdtemp)
 const rmdir        = promisify(fs.rmdir)
 const unlink       = promisify(fs.unlink)
@@ -24,29 +23,32 @@ async function* lines (input) {
     }
 }
 
-async function* executeCeptre (ceptreProgram, inputStream) {
+async function executeCeptre (ceptreProgram) {
     const folder = await mkdtemp('cep-temp')
     const inputFile = path.join(folder, 'ceptreProgram')
     await writeFile(inputFile, ceptreProgram)
 
-    const subprocess = spawn('../../ceptre', ['ceptreProgram'], { cwd: folder })
-    inputStream.pipe(subprocess.stdin)
+    const subprocess = spawn(__dirname + '/ceptre', ['ceptreProgram'], { cwd: folder })
 
-    for await (const line of lines(subprocess.stdout)) {
-        yield JSON.parse(line)
+    const eventStream = async function* () {
+        for await (const line of lines(subprocess.stdout)) {
+            yield JSON.parse(line)
+        }
+        await unlink(inputFile).catch(()=>{})
+        await unlink(path.join(folder, 'trace.dot')).catch(()=>{})
+        await unlink(path.join(folder, 'ceptre.json')).catch(()=>{})
+        await rmdir(folder)
     }
 
-    await unlink(inputFile).catch(()=>{})
-    await unlink(path.join(folder, 'trace.dot')).catch(()=>{})
-    await unlink(path.join(folder, 'ceptre.json')).catch(()=>{})
-    await rmdir(folder)
-}
+    const input = subprocess.stdin
 
-async function main() {
-    const ceptreProgram = await readFile('./rock_paper_scissors.cep')
-    for await (const event of executeCeptre(ceptreProgram, process.stdin)) {
-        console.log(event)
+    return {
+        eventStream,
+        input
     }
+
 }
 
-main().catch(e => console.error(e))
+module.exports = {
+    executeCeptre
+}
