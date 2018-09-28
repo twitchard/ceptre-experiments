@@ -1,4 +1,7 @@
-install:
+build:
+	( cd client && node_modules/.bin/parcel build -d dist index.html )
+
+deps:
 	npm install
 	( cd client && npm install )
 
@@ -7,3 +10,7 @@ watch-client:
 
 watch-server:
 	node_modules/.bin/nodemon server.js
+
+serve:
+	node server.js
+    

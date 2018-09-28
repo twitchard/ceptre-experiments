@@ -2,7 +2,7 @@ const socketio = require('socket.io')
 const express  = require('express')
 const http = require('http')
 const rockPaperScissorsProgram = require('fs').readFileSync(__dirname + '/rock_paper_scissors.cep')
-const { executeCeptre } = require('../src/ceptre.js')
+const { executeCeptre } = require('./ceptre.js')
 const { Duplex } = require('stream')
 
 const PORT = 3000

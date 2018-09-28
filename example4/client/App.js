@@ -26,12 +26,17 @@ export default class App extends Component {
                 console.log(event)
                 this.setState({...this.state, transitions: event.transitions, context: event.context})
             }
+            if (event.event === 'rule'
+                && (event.content.command.rulename === 'win'
+                    || event.content.command.rulename === 'draw')) {
+                this.setState({...this.state, lastPlay: event.content})
+            }
         })
     }
     reset () {
         this.state.socket.emit('reset')
     }
-    render ({}, {socket, player, transitions, context}) {
+    render ({}, {socket, player, lastPlay, transitions, context}) {
         if (!socket) {
             return <h1>Connecting...</h1>
         }
@@ -61,6 +66,7 @@ export default class App extends Component {
                 player={player}
                 transitions={transitions}
                 fireAction={(n) => this.state.socket.emit('selection', `${n}`)}
+                lastPlay={lastPlay}
                 context={context}
             />
         </div>
